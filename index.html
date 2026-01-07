@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Tool Box - Resource Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.1); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+        .modal-open { overflow: hidden; }
+        
+        .qr-glow {
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+            animation: qr-pulse 2s infinite;
+        }
+        @keyframes qr-pulse {
+            0% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(0, 243, 255, 0.4); }
+            100% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.2); }
+        }
+
+        .loading-shimmer {
+            background: linear-gradient(90deg, #f3f3f3 25%, #e2e2e2 50%, #f3f3f3 75%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+        @keyframes shimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        .notes-glow {
+            box-shadow: inset 0 0 30px rgba(0, 112, 255, 0.1);
+        }
+
+        #project-notes:empty:before {
+            content: attr(data-placeholder);
+            color: #9CA3AF;
+            font-weight: 400;
+        }
+        #project-notes ul { list-style-type: disc; padding-left: 1.5rem; }
+        #project-notes ol { list-style-type: decimal; padding-left: 1.5rem; }
+        
+        .ai-generated-box {
+            animation: slideUp 0.4s cubic-bezier(0, 0, 0.2, 1);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 min-h-screen text-white selection:bg-[#B87333] selection:text-white">
+
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-[#001D4D] via-[#374151] to-[#000F2E] sticky top-0 z-50 shadow-2xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <!-- LOGO: Uses logo.png in same folder for GitHub/Netlify Deployment -->
+                <div class="p-1 rounded-xl bg-white backdrop-blur-md border border-white/20 shadow-inner overflow-hidden flex items-center justify-center w-14 h-14">
+                    <img id="header-logo" src="logo.png" alt="Innovation Tool Box Logo" class="w-full h-full object-contain rounded-lg" onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/2103/2103830.png';">
+                </div>
+                <div>
+                    <p class="text-xl font-black tracking-[0.2em] uppercase italic text-white drop-shadow-md">Innovation Tool Box</p>
+                    <p class="text-[10px] text-gray-300 font-mono tracking-widest uppercase font-bold opacity-70">App Trilogy Terminal</p>
+                </div>
+            </div>
+            <nav class="flex flex-wrap gap-2 p-1 bg-black/20 rounded-2xl border border-white/10 justify-center">
+                <button onclick="switchTab('hub')" id="btn-hub" class="px-6 py-2 rounded-xl text-xs font-black transition-all bg-white text-slate-800 shadow-xl">
+                    RESOURCE HUB
+                </button>
+                <button onclick="switchTab('bonus')" id="btn-bonus" class="px-6 py-2 rounded-xl text-xs font-black transition-all hover:bg-white/10 text-white">
+                    BONUS APPS
+                </button>
+                <button onclick="switchTab('about')" id="btn-about" class="px-6 py-2 rounded-xl text-xs font-black transition-all hover:bg-white/10 text-white">
+                    ABOUT VIBE
+                </button>
+                <button onclick="openShareModal()" class="px-4 py-2 rounded-xl text-xs font-black transition-all bg-[#B87333] text-white hover:brightness-110 flex items-center gap-2">
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                    SHARE
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Hub -->
+    <div id="content-hub" class="max-w-7xl mx-auto px-6 py-16">
+        <div class="mb-20 text-center relative">
+            <h2 class="text-6xl md:text-7xl font-black mb-6 tracking-tight leading-none uppercase drop-shadow-lg">
+                From <span class="text-blue-300">Vision</span> <br/> 
+                <span class="text-gray-400">To</span> <span class="text-[#B87333]">Product</span>
+            </h2>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto font-semibold text-center">
+                Vibe coding is the engine of rapid deployment. <br/>
+                <span class="text-white">Describe the vision. Execute the future.</span>
+            </p>
+        </div>
+
+        <!-- Resources Section -->
+        <section class="mb-24">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-1.5 h-8 bg-[#B87333] rounded-full"></div>
+                <h3 class="text-3xl font-black tracking-tight text-white uppercase text-left">Pre-Flight Checklist</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resource-grid"></div>
+        </section>
+
+        <!-- Credential Vault -->
+        <section class="mb-24">
+            <div class="p-10 rounded-[2.5rem] bg-gray-900/40 border border-white/10 shadow-3xl text-left">
+                <div class="flex items-center gap-3 mb-8">
+                    <i data-lucide="database" class="w-7 h-7 text-blue-400"></i>
+                    <h3 class="text-2xl font-black uppercase tracking-tight">Credential Vault</h3>
+                </div>
+                <textarea id="vault" class="w-full h-64 bg-white text-gray-900 border-2 border-gray-300 rounded-3xl p-8 text-sm font-mono focus:ring-4 focus:ring-blue-400 outline-none shadow-inner">Supabase URL: [Paste Here]
+Supabase Anon Key: [Paste Here]
+GitHub Username: [YourUsername]
+Netlify Live URL: [Paste Here]
+Web3Form Access Key: [Paste Here]
+Gemini API Key: [Paste Here]
+Google Sheet URL Key: [Paste Here]</textarea>
+                <p class="text-[10px] text-gray-400 mt-4 uppercase tracking-[0.3em] font-bold px-4">Local session memory — Secure Sandbox</p>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section class="mb-12">
+            <div class="flex items-center gap-3 mb-10">
+                <div class="w-1.5 h-8 bg-blue-400 rounded-full"></div>
+                <h3 class="text-3xl font-black tracking-tight text-white uppercase text-left">The Main Project</h3>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8" id="primary-app-grid"></div>
+        </section>
+
+        <!-- Development Journal (Rich Text & Roadmap) -->
+        <section class="mb-24">
+            <div class="p-10 rounded-[2.5rem] bg-gray-900/60 border-4 border-[#B87333] shadow-[0_0_50px_rgba(184,115,51,0.2)] notes-glow text-left">
+                <div class="flex items-center gap-3 mb-8">
+                    <i data-lucide="edit-3" class="w-8 h-8 text-[#B87333]"></i>
+                    <h3 class="text-3xl font-black uppercase tracking-tight italic">Project Development Journal</h3>
+                </div>
+                
+                <div class="flex flex-wrap gap-2 mb-4 p-2 bg-gradient-to-r from-gray-700 to-gray-600 rounded-xl border border-white/10 shadow-inner overflow-x-auto">
+                    <button onclick="formatDoc('bold')" class="p-3 hover:bg-white/10 rounded-lg transition-all text-white border border-transparent hover:border-[#B87333] flex items-center gap-2 group">
+                        <i data-lucide="bold" class="w-5 h-5"></i><span class="text-[10px] font-black uppercase tracking-tighter">Bold</span>
+                    </button>
+                    <button onclick="formatDoc('underline')" class="p-3 hover:bg-white/10 rounded-lg transition-all text-white border border-transparent hover:border-[#B87333] flex items-center gap-2 group">
+                        <i data-lucide="underline" class="w-5 h-5"></i><span class="text-[10px] font-black uppercase tracking-tighter">Underline</span>
+                    </button>
+                    <button onclick="formatDoc('insertUnorderedList')" class="p-3 hover:bg-white/10 rounded-lg transition-all text-white border border-transparent hover:border-[#B87333] flex items-center gap-2 group">
+                        <i data-lucide="list" class="w-5 h-5"></i><span class="text-[10px] font-black uppercase tracking-tighter">Bullets</span>
+                    </button>
+                    <div class="w-px bg-white/10 mx-2 self-stretch"></div>
+                    <button onclick="formatDoc('foreColor', 'black')" class="p-3 hover:bg-white/10 rounded-lg transition-all text-white border border-transparent hover:border-[#B87333] flex items-center gap-2 group">
+                        <div class="w-4 h-4 bg-black rounded-full border border-white/20"></div><span class="text-[10px] font-black uppercase tracking-tighter">Black</span>
+                    </button>
+                    <button onclick="formatDoc('foreColor', 'red')" class="p-3 hover:bg-white/10 rounded-lg transition-all text-white border border-transparent hover:border-[#B87333] flex items-center gap-2 group">
+                        <div class="w-4 h-4 bg-red-600 rounded-full border border-white/20"></div><span class="text-[10px] font-black uppercase tracking-tighter">Red</span>
+                    </button>
+                    <button onclick="formatDoc('foreColor', 'blue')" class="p-3 hover:bg-white/10 rounded-lg transition-all text-white border border-transparent hover:border-[#B87333] flex items-center gap-2 group">
+                        <div class="w-4 h-4 bg-blue-600 rounded-full border border-white/20"></div><span class="text-[10px] font-black uppercase tracking-tighter">Blue</span>
+                    </button>
+                </div>
+
+                <div id="project-notes" contenteditable="true" data-placeholder="Start typing your development notes here... Outline your logic pivots and architectural intent." class="w-full h-96 bg-white text-gray-900 border-4 border-blue-400/30 rounded-[2rem] p-10 text-base font-bold focus:ring-8 focus:ring-[#B87333]/20 outline-none transition-all shadow-2xl custom-scrollbar overflow-y-auto"></div>
+
+                <!-- LLM Roadmap Display -->
+                <div id="roadmap-display" class="hidden mt-8 p-8 bg-blue-50/10 border-2 border-blue-400/30 rounded-[2rem] text-left ai-generated-box"></div>
+
+                <div class="flex flex-col md:flex-row justify-between items-center mt-8 gap-4 px-4">
+                    <div class="flex flex-col">
+                        <p class="text-[10px] text-[#B87333] font-black uppercase tracking-[0.4em]">Director Level Workspace — Idea Polisher Phase</p>
+                        <p class="text-[9px] text-gray-500 font-bold uppercase mt-1 italic">Journal auto-saves to local browser session.</p>
+                    </div>
+                    <div class="flex gap-4">
+                        <button onclick="generateRoadmap()" class="group relative px-6 py-4 bg-slate-800 border-2 border-[#B87333]/50 text-white rounded-2xl flex items-center gap-3 hover:scale-105 transition-all shadow-xl">
+                            <i data-lucide="map" class="w-5 h-5 text-[#B87333]"></i>
+                            <span class="text-xs font-black uppercase tracking-widest">✨ Roadmap</span>
+                        </button>
+                        <button onclick="exportFounderBlueprint(event)" class="group relative px-6 py-4 bg-blue-600 text-white rounded-2xl flex items-center gap-3 hover:scale-105 transition-all shadow-xl shadow-blue-900/20">
+                            <i data-lucide="file-text" class="w-5 h-5"></i>
+                            <span class="text-xs font-black uppercase tracking-widest">✨ Export Blueprint</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Info -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
+            <section>
+                <div class="flex items-center gap-3 mb-8 text-left">
+                    <i data-lucide="zap" class="w-8 h-8 text-yellow-400"></i>
+                    <h3 class="text-3xl font-black tracking-tight uppercase">Best Practices</h3>
+                </div>
+                <ul class="space-y-4" id="tips-list"></ul>
+            </section>
+            <section>
+                <div class="flex items-center gap-3 mb-8 text-left">
+                    <i data-lucide="help-circle" class="w-8 h-8 text-[#B87333]"></i>
+                    <h3 class="text-3xl font-black tracking-tight uppercase">Builder Q&A</h3>
+                </div>
+                <div class="space-y-4" id="faq-list"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Bonus Apps Tab -->
+    <div id="content-bonus" class="hidden max-w-7xl mx-auto px-6 py-24 text-center">
+        <h2 class="text-6xl font-black mb-6 tracking-tighter uppercase drop-shadow-lg">Bonus <span class="text-[#B87333]">Deployment</span></h2>
+        <div class="h-2 w-32 bg-blue-400 mx-auto rounded-full mb-8 shadow-[0_0_15px_rgba(0,243,255,0.5)]"></div>
+        <p class="text-2xl text-gray-300 leading-relaxed font-black max-w-3xl mx-auto mb-20">Expand your ecosystem with foundational lead management prototypes.</p>
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-10 text-left" id="bonus-app-grid"></section>
+    </div>
+
+    <!-- Manifesto Tab -->
+    <div id="content-about" class="hidden max-w-4xl mx-auto px-6 py-24 text-left">
+        <div class="mb-16">
+            <h2 class="text-6xl font-black mb-6 tracking-tighter uppercase drop-shadow-lg text-left">The Vibe <span class="text-[#B87333]">Manifesto</span></h2>
+            <div class="h-2 w-32 bg-blue-400 rounded-full mb-12 shadow-[0_0_15px_rgba(0,243,255,0.5)]"></div>
+            <p class="text-2xl text-gray-300 leading-relaxed font-black">Software is no longer built; it is <span class="text-white underline decoration-blue-500 underline-offset-8">willed into existence</span> through conversation.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20 text-left" id="about-cards"></div>
+        <footer class="text-center py-20 border-t border-white/10">
+            <div class="flex justify-center items-center gap-3 mb-6">
+                <div class="p-1.5 rounded-lg bg-[#B87333] shadow-lg"><i data-lucide="cpu" class="w-5 h-5 text-white"></i></div>
+                <span class="font-black italic text-2xl text-white tracking-tighter uppercase">Innovation Tool Box</span>
+            </div>
+            <p class="text-gray-500 text-[10px] font-mono uppercase tracking-[0.5em] font-bold">From Vision To Product — Archive</p>
+        </footer>
+    </div>
+
+    <!-- Global Modal Container -->
+    <div id="modal-container" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/95 backdrop-blur-xl">
+        <div id="modal-content" class="w-full max-w-3xl bg-white border-4 border-slate-700 rounded-[3rem] p-12 shadow-2xl relative text-gray-900 max-h-[90vh] overflow-y-auto custom-scrollbar"></div>
+    </div>
+
+    <!-- AI Assistant -->
+    <div class="fixed bottom-10 right-10 z-[100]">
+        <button onclick="toggleChat()" class="relative flex items-center justify-center w-20 h-20 bg-white rounded-full border-4 border-blue-500 text-blue-600 hover:scale-110 transition-transform shadow-2xl">
+            <i data-lucide="message-square" class="w-9 h-9"></i>
+        </button>
+        <div id="chat-panel" class="hidden absolute bottom-28 right-0 w-[350px] h-[550px] bg-white border-2 border-gray-200 rounded-[2.5rem] shadow-2xl flex flex-col overflow-hidden text-gray-900 text-left">
+            <div class="p-6 bg-gradient-to-r from-blue-600 to-blue-800 flex items-center justify-between text-white">
+                <div class="flex items-center gap-3">
+                    <i data-lucide="sparkles" class="w-5 h-5"></i>
+                    <span class="font-black text-xs uppercase tracking-widest">AI Assistant</span>
+                </div>
+                <button onclick="toggleChat()" class="p-1.5 hover:bg-white/20 rounded-lg transition-all" title="Exit Chat">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div id="chat-history" class="flex-1 overflow-y-auto p-6 space-y-6 bg-gray-50 custom-scrollbar">
+                <div class="flex justify-start">
+                    <div class="max-w-[85%] p-5 rounded-3xl text-xs leading-relaxed font-bold shadow-sm bg-white border border-gray-200 text-gray-700">✨ Hello! Ask me about your workshop resources and I will provide concise answers with direct links.</div>
+                </div>
+            </div>
+            <form onsubmit="handleChat(event)" class="p-6 bg-white border-t border-gray-100">
+                <input type="text" id="chat-input" placeholder="Type message..." class="w-full bg-gray-100 border-2 border-transparent rounded-2xl px-5 py-4 text-xs font-bold focus:outline-none focus:border-blue-500 text-gray-900 shadow-inner">
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- PASTE YOUR GOOGLE AI STUDIO KEY HERE ---
+        const apiKey = ""; 
+
+        const resources = [
+            { id: 'google', name: 'Google Account', desc: 'Central hub for Drive & Sheets.', link: 'https://accounts.google.com', steps: ['Sign in to your primary Google account.', 'Ensure you have access to Google Drive.', 'Create a folder named "Vibe Coding Assets".'] },
+            { id: 'web3forms', name: 'Web3Forms', desc: 'Form-to-email/sheet delivery.', link: 'https://web3forms.com', steps: ['Select the Free Account option.', 'Verify your email address.', 'Copy your Access Key for the Catalyst app.'] },
+            { id: 'gemini', name: 'Gemini API Key', desc: 'The "Brains" of your apps.', link: 'https://aistudio.google.com/welcome', steps: ['Select "Get Started" and sign in.', 'Select "Get API key".', 'Create API Key and paste it into the Vault.'] },
+            { id: 'github', name: 'GitHub', desc: 'Host your code repositories.', link: 'https://github.com', steps: ['Use your Gmail email to signup.', 'Create a repository: title it "Idea Polisher".'] },
+            { id: 'netlify', name: 'Netlify', desc: 'One-click hosting.', link: 'https://netlify.com', steps: ['Select "Signup with GitHub".', 'Select "Authorize Netlify" to link accounts.'] },
+            { id: 'supabase', name: 'Supabase', desc: 'Backend & Auth.', link: 'https://supabase.com', steps: ['Create a new project.', 'Note your Project URL and Anon Key.'] }
+        ];
+
+        const apps = [
+            { id: 'catalyst', name: 'Connection Catalyst', theme: 'Emerald', tool: 'Gemini', desc: 'Landing page to capture leads.', link: 'https://gemini.google.com', notes: 'Focus on mobile responsiveness.', script: 'Make me a mobile-first Emerald themed lead capture page. Use Tailwind CSS and Web3Forms. Colors: #50C878 and white.', example: 'I need a sleek lead gen page...' },
+            { id: 'nurture', name: 'Nurture Factory', theme: 'Opal', tool: 'NotebookLM', desc: 'AI Dashboard follow-up strategies.', link: 'https://labs.google/', notes: 'Reference sheet name "nurture factory".', script: 'Build a luxury Opal themed dashboard using React. Fetch from Google Sheet "nurture factory".', example: 'Create an AI dashboard...' },
+            { id: 'idea', name: 'Idea Polisher', theme: 'Deep Tech', tool: 'AI Studio', desc: 'Tool for refining ideas.', link: 'https://aistudio.google.com', notes: 'Utilize Supabase for storage.', script: 'Construct a professional Deep Tech app. Use Supabase for DB. Colors: Charcoal #0F0F0F and Copper #B87333.', example: 'Build a business plan generator...' }
+        ];
+
+        const tips = [
+            { title: "The Reset Rule", desc: "If AI drifts, kill session. New chat = clean context.", color: 'border-blue-400' },
+            { title: "Hex-Code Force", desc: "Always explicitly mention brand hex codes.", color: 'border-[#B87333]' },
+            { title: "The Asset Rule", desc: "Reference your Sheet names exactly.", color: 'border-blue-400' },
+            { title: "Zero Interference", desc: "Don't ask AI to disable its own inputs.", color: 'border-[#B87333]' }
+        ];
+
+        const faqs = [
+            { q: "What is Vibe Coding?", a: "Natural language driving software lifecycle." },
+            { q: "Why did my code stop working?", a: "Likely 'drift'. Use the Reset Rule." }
+        ];
+
+        // --- GEMINI 1.5 FLASH LOGIC ---
+        async function callGemini(prompt, sys = "") {
+            if (!apiKey) return "Error: Please paste your API key in the Vault first.";
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            const payload = { contents: [{ parts: [{ text: prompt }] }], systemInstruction: { parts: [{ text: sys }] } };
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const r = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                    const res = await r.json();
+                    if (res.candidates?.[0]?.content?.parts?.[0]?.text) return res.candidates[0].content.parts[0].text;
+                    throw new Error();
+                } catch (e) { if (i === 4) return "Connection error."; await new Promise(r => setTimeout(r, delay)); delay *= 2; }
+            }
+        }
+
+        async function generateVibeScript(appName) {
+            const niche = document.getElementById('niche-input').value.trim() || "generic";
+            const output = document.getElementById('ai-script-output');
+            const app = apps.find(a => a.name === appName);
+            output.innerHTML = `<div class="p-4 rounded-xl loading-shimmer h-24 mt-4"></div>`;
+            const res = await callGemini(`Customize Vibe Script for ${app.name}: ${app.script}. Niche: ${niche}.`, "Vibe Expert. Final text only. Keep #0F0F0F / #B87333 aesthetic.");
+            output.innerHTML = `<div class="bg-gray-100 p-6 rounded-2xl font-mono text-xs text-blue-600 border-2 italic mt-4 text-left">${res}</div>`;
+        }
+
+        async function brainstormFeatures(appName) {
+            const output = document.getElementById('ai-brainstorm-output');
+            const app = apps.find(a => a.name === appName);
+            output.innerHTML = `<div class="p-4 rounded-xl loading-shimmer h-20 mt-4"></div>`;
+            const res = await callGemini(`App: ${app.name}. Vision: ${app.desc}. Suggest 3 features.`, "Product Strategist. Bold/Brief/Actionable.");
+            output.innerHTML = `<div class="mt-4 p-6 bg-blue-900/20 border-2 border-blue-400 rounded-2xl text-left text-xs font-bold text-blue-100">${res.replace(/\n/g, '<br>')}</div>`;
+        }
+
+        async function auditCurrentScript(appName) {
+            const out = document.getElementById('ai-audit-output');
+            const app = apps.find(a => a.name === appName);
+            out.innerHTML = `<div class="p-4 rounded-xl loading-shimmer h-20 mt-4"></div>`;
+            const res = await callGemini(`Audit: ${app.script}`, "Technical Auditor. Score 0-100 and 3 technical suggestions. Format: [Score] | [Tips].");
+            out.innerHTML = `<div class="mt-4 p-6 bg-slate-800 rounded-2xl border-2 border-blue-400 text-xs font-bold text-left text-blue-100">${res}</div>`;
+        }
+
+        async function auditHubScript() {
+            const input = document.getElementById('hub-audit-input').value;
+            const output = document.getElementById('hub-audit-output');
+            if (!input.trim()) return;
+            output.innerHTML = `<div class="p-4 rounded-xl loading-shimmer h-20 mt-4"></div>`;
+            const res = await callGemini(input, "Audit script. Score 0-100 and 3 technical suggestions. Format: [Score] | [Tips].");
+            output.innerHTML = `<div class="mt-4 p-6 bg-slate-800 rounded-2xl border-2 border-blue-400 text-left text-blue-100 font-bold text-xs">${res}</div>`;
+        }
+
+        async function generateRoadmap() {
+            const note = document.getElementById('project-notes').innerText;
+            const out = document.getElementById('roadmap-display');
+            if (!note.trim()) return;
+            out.classList.remove('hidden');
+            out.innerHTML = `<div class="p-4 rounded-xl loading-shimmer h-24"></div>`;
+            const res = await callGemini(`Notes: ${note}`, "Director. Synthesize into professional 3-Month Roadmap Phase 1, 2, 3.");
+            out.innerHTML = `<h4 class="text-xl font-black text-white mb-4">✨ AI Growth Roadmap</h4><div class="text-sm text-gray-300 leading-loose font-bold whitespace-pre-line text-left">${res}</div>`;
+            lucide.createIcons();
+        }
+
+        async function exportFounderBlueprint(e) {
+            const btn = e.currentTarget; btn.disabled = true;
+            const vault = document.getElementById('vault').value;
+            const journal = document.getElementById('project-notes').innerText;
+            const res = await callGemini(`Keys: ${vault}\nJournal: ${journal}`, "Founder's Assistant. Markdown Blueprint.");
+            const blob = new Blob([res], { type: 'text/markdown' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'Innovation_Tool_Box_Blueprint.md';
+            a.click(); btn.disabled = false;
+        }
+
+        async function handleChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const history = document.getElementById('chat-history');
+            const query = input.value.trim(); if (!query) return;
+            history.innerHTML += `<div class="flex justify-end"><div class="max-w-[85%] p-5 rounded-3xl text-xs font-bold bg-blue-600 text-white">${query}</div></div>`;
+            input.value = ''; history.scrollTop = history.scrollHeight;
+            const loadingId = 'ai-loading-' + Date.now();
+            history.innerHTML += `<div id="${loadingId}" class="flex justify-start"><div class="max-w-[85%] p-5 rounded-3xl text-xs bg-white text-gray-400 italic">Thinking...</div></div>`;
+            history.scrollTop = history.scrollHeight;
+            const sys = "Concise Assistant (1-2 Paragraphs max). ALWAYS include links: Google AI Studio (https://aistudio.google.com), Web3Forms (https://web3forms.com), Supabase (https://supabase.com), Netlify (https://netlify.com), GitHub (https://github.com). Use \\n\\n for paragraph breaks.";
+            const reply = await callGemini(query, sys);
+            document.getElementById(loadingId).remove();
+            const formatted = reply.replace(/\n\n/g, '<br><br>').replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="text-blue-600 underline font-black">$1</a>');
+            history.innerHTML += `<div class="flex justify-start text-left"><div class="max-w-[85%] p-5 rounded-3xl text-xs leading-relaxed font-bold bg-white border border-gray-200 text-gray-700 shadow-sm">${formatted}</div></div>`;
+            history.scrollTop = history.scrollHeight;
+        }
+
+        // --- UI LOGIC ---
+        function formatDoc(cmd, val = null) { document.execCommand(cmd, false, val); document.getElementById('project-notes').focus(); }
+        function switchTab(t) {
+            document.getElementById('content-hub').classList.toggle('hidden', t !== 'hub');
+            document.getElementById('content-bonus').classList.toggle('hidden', t !== 'bonus');
+            document.getElementById('content-about').classList.toggle('hidden', t !== 'about');
+            ['hub', 'bonus', 'about'].forEach(id => {
+                const btn = document.getElementById(`btn-${id}`);
+                if (btn) btn.className = (id === t) ? 'px-6 py-2 rounded-xl text-xs font-black transition-all bg-white text-slate-800 shadow-xl' : 'px-6 py-2 rounded-xl text-xs font-black transition-all hover:bg-white/10 text-white';
+            });
+        }
+        function toggleChat() { document.getElementById('chat-panel').classList.toggle('hidden'); }
+        function closeModal() { document.getElementById('modal-container').classList.add('hidden'); }
+
+        function openResource(id) {
+            const res = resources.find(r => r.id === id);
+            document.getElementById('modal-content').innerHTML = `<button onclick="closeModal()" class="absolute top-10 right-10 text-gray-400 p-2 font-bold">✕</button><h3 class="text-4xl font-black mb-2 text-left">Implementation</h3><p class="text-blue-600 text-xs mb-8 text-left uppercase tracking-widest">${res.name}</p><div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6 mb-12 text-left">${res.steps.map((s, i) => `<div class="flex gap-4 items-start"><div class="w-7 h-7 rounded-xl bg-slate-700 flex items-center justify-center text-[10px] text-white shadow-lg">${i+1}</div><p class="text-sm font-bold text-gray-700">${s}</p></div>`).join('')}</div><a href="${res.link}" target="_blank" class="block text-center py-5 rounded-2xl bg-[#B87333] text-white uppercase text-xs font-black shadow-xl hover:brightness-110">Launch Configuration</a>`;
+            document.getElementById('modal-container').classList.remove('hidden');
+        }
+
+        function openApp(name) {
+            const app = apps.find(a => a.name === name);
+            document.getElementById('modal-content').innerHTML = `
+                <button onclick="closeModal()" class="absolute top-10 right-10 text-gray-300 p-4 font-bold">✕</button>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-16 text-left">
+                    <div class="lg:col-span-1">
+                        <div class="p-8 rounded-3xl bg-white border shadow-xl mb-8"><p class="text-[10px] text-[#B87333] uppercase font-black tracking-widest mb-2">Phase Code</p><p class="font-black text-3xl">${app.theme}</p></div>
+                        <a href="${app.link}" target="_blank" class="flex items-center justify-center gap-4 py-6 rounded-3xl bg-slate-700 text-white text-xs font-black uppercase hover:scale-105 shadow-xl"><i data-lucide="external-link" class="w-5 h-5"></i> Open Builder</a>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <h3 class="text-5xl font-black text-black mb-12 uppercase">${app.name}</h3>
+                        <div class="space-y-12">
+                            <div class="p-8 bg-white rounded-3xl border shadow-sm"><h5 class="text-[10px] uppercase font-black mb-6 text-gray-400 tracking-widest flex items-center gap-2"><i data-lucide="info" class="w-4 h-4 text-[#B87333]"></i> Strategic Logic</h5><p class="text-lg font-bold text-gray-700">${app.notes}</p></div>
+                            
+                            <div class="p-8 bg-slate-900 border-[#B87333]/40 border-4 rounded-3xl shadow-xl">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h5 class="text-[10px] uppercase font-black text-[#B87333] tracking-widest flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4"></i> LLM Brainstormer</h5>
+                                    <button onclick="brainstormFeatures('${app.name}')" class="bg-[#B87333] text-white px-6 py-2 rounded-xl font-black uppercase text-[10px]">Suggest</button>
+                                </div>
+                                <div id="ai-brainstorm-output"></div>
+                            </div>
+
+                            <div class="p-8 bg-slate-900 border-blue-400 border-4 rounded-3xl shadow-xl">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h5 class="text-[10px] uppercase font-black text-blue-400 tracking-widest flex items-center gap-2"><i data-lucide="activity" class="w-4 h-4"></i> Script Auditor</h5>
+                                    <button onclick="auditCurrentScript('${app.name}')" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-black uppercase text-[10px]">Scan</button>
+                                </div>
+                                <div id="ai-audit-output"></div>
+                            </div>
+
+                            <div class="p-8 bg-blue-50 border rounded-3xl text-gray-900 shadow-sm">
+                                <h5 class="text-[10px] uppercase font-black text-blue-600 mb-4 tracking-widest">✨ Custom Vibe Generator</h5>
+                                <div class="flex gap-2 mb-6">
+                                    <input type="text" id="niche-input" placeholder="Enter niche..." class="flex-1 px-4 py-3 rounded-xl border border-blue-200 outline-none">
+                                    <button onclick="generateVibeScript('${app.name}')" class="bg-blue-600 text-white px-6 py-2 rounded-xl font-black text-[10px] uppercase">Generate</button>
+                                </div>
+                                <div id="ai-script-output"></div>
+                            </div>
+
+                            <div class="relative bg-white p-8 rounded-3xl border shadow-inner italic font-mono text-xs text-gray-600 leading-loose">${app.script}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal-container').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function openShareModal() {
+            document.getElementById('modal-content').innerHTML = `<button onclick="closeModal()" class="absolute top-10 right-10 text-gray-400 p-2 font-bold">✕</button><div class="text-center"><h3 class="text-4xl font-black mb-10 uppercase text-gray-900">Share Tool Box</h3><div id="qr-container" class="bg-white p-6 rounded-3xl border-4 border-blue-400 mb-6 inline-block qr-glow"><img id="qr-image" src="https://quickchart.io/qr?text=https://innovation-engine.netlify.app&size=200" class="w-48 h-48"></div><p class="text-xs text-gray-400 mb-6 uppercase font-black tracking-widest">Scan to Visit Workspace</p><input type="text" id="share-url" value="https://innovation-engine.netlify.app" class="block w-full max-w-xs mx-auto mb-4 p-3 rounded-xl border font-bold text-gray-700 outline-none focus:border-blue-400"><button onclick="updateQRCode()" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-black uppercase shadow-xl hover:brightness-110">Update Site Link</button></div>`;
+            document.getElementById('modal-container').classList.remove('hidden');
+        }
+
+        function updateQRCode() {
+            const url = document.getElementById('share-url').value;
+            document.getElementById('qr-image').src = `https://quickchart.io/qr?text=${encodeURIComponent(url)}&size=200`;
+        }
+
+        function createAppCard(a) {
+            return `<div onclick="openApp('${a.name}')" class="group p-10 rounded-[2.5rem] bg-gradient-to-br from-[#0070FF] to-[#0047FF] text-white border-2 border-white/10 hover:scale-[1.02] transition-all cursor-pointer flex flex-col h-full shadow-2xl relative overflow-hidden text-left"><div class="inline-block px-4 py-1.5 rounded-xl text-[10px] font-black uppercase tracking-widest mb-8 bg-white/20 border border-white/30">${a.theme} Phase</div><h4 class="text-3xl font-black mb-4">${a.name}</h4><p class="text-sm opacity-90 mb-10 leading-relaxed font-medium line-clamp-3">${a.desc}</p><div class="mt-auto text-xs font-black uppercase flex items-center gap-2 group-hover:gap-3 transition-all"><span>Blueprint</span><i data-lucide="chevron-right" class="w-5 h-5"></i></div></div>`;
+        }
+
+        window.onload = () => {
+            resources.forEach(r => document.getElementById('resource-grid').innerHTML += `<div onclick="openResource('${r.id}')" class="group relative p-8 rounded-3xl bg-gray-100 text-gray-900 border border-transparent hover:border-[#B87333] transition-all cursor-pointer shadow-lg text-left"><h4 class="text-xl font-black mb-3">${r.name}</h4><p class="text-sm text-gray-600 font-medium leading-relaxed">${r.desc}</p></div>`);
+            const pGrid = document.getElementById('primary-app-grid');
+            apps.forEach(a => pGrid.innerHTML += createAppCard(a));
+            pGrid.innerHTML += `<div class="p-10 rounded-[2.5rem] bg-slate-900 border-4 border-blue-400 shadow-2xl flex flex-col h-full text-left"><h4 class="text-2xl font-black text-blue-400 uppercase tracking-tight flex items-center gap-3 mb-6"><i data-lucide="shield-check" class="w-6 h-6"></i> Script Auditor</h4><textarea id="hub-audit-input" placeholder="Paste draft Vibe Script here for a Technical Fidelity Audit..." class="flex-1 w-full bg-gray-800 border-2 border-slate-700 rounded-2xl p-6 text-xs font-mono text-blue-100 outline-none mb-6 min-h-[120px] focus:border-blue-400 custom-scrollbar"></textarea><button onclick="auditHubScript()" class="w-full py-4 bg-blue-600 text-white rounded-xl font-black text-[10px] uppercase flex items-center justify-center gap-3 shadow-lg hover:brightness-110"><i data-lucide="search" class="w-4 h-4"></i> Scan Script</button><div id="hub-audit-output"></div></div>`;
+            tips.forEach(t => document.getElementById('tips-list').innerHTML += `<li class="p-8 rounded-3xl bg-gray-900/30 border-l-[6px] ${t.color} text-left shadow-lg backdrop-blur-sm"><strong class="block text-white text-xl font-black mb-1">${t.title}</strong><span class="text-sm text-gray-400 leading-relaxed font-medium">${t.desc}</span></li>`);
+            faqs.forEach(f => document.getElementById('faq-list').innerHTML += `<details class="group rounded-3xl bg-gray-100 text-gray-900 p-6 cursor-pointer text-left shadow-md hover:border-blue-400 transition-all border-2 border-transparent"><summary class="font-black text-sm list-none flex justify-between uppercase tracking-tight">${f.q}<i data-lucide="chevron-right" class="w-5 h-5 group-open:rotate-90 transition-all text-blue-600"></i></summary><p class="mt-6 text-sm text-gray-600 pt-6 border-t font-medium leading-relaxed">${f.a}</p></details>`);
+            document.getElementById('about-cards').innerHTML = `<div class="p-10 rounded-3xl bg-gray-100 text-gray-900 border-t-8 border-blue-500 shadow-xl text-left"><h3 class="font-black text-xs uppercase text-blue-600 mb-6 italic tracking-widest">Origins (2025)</h3><p class="text-gray-600 leading-relaxed text-sm font-bold italic">"Vibe coding represents the collapse of the barrier between human thought and digital execution."</p></div><div class="p-10 rounded-3xl bg-gray-100 text-gray-900 border-t-8 border-[#B87333] shadow-xl text-left"><h3 class="font-black text-xs uppercase text-[#B87333] mb-6 tracking-widest">Director Shift</h3><p class="text-gray-600 font-bold text-sm leading-relaxed text-left">The role of the developer has evolved into the Creative Director. Vision is implementation.</p></div>`;
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
